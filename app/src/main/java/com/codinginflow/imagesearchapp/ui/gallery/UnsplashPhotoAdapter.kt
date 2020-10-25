@@ -11,7 +11,7 @@ import com.codinginflow.imagesearchapp.R
 import com.codinginflow.imagesearchapp.data.UnsplashPhoto
 import com.codinginflow.imagesearchapp.databinding.ItemUnsplashPhotoBinding
 
-class UnsplashPhotoAdapter :
+class UnsplashPhotoAdapter(private val listener: OnItemClickListener ) :
     PagingDataAdapter<UnsplashPhoto, UnsplashPhotoAdapter.PhotoViewHolder>(PHOTO_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
@@ -30,8 +30,25 @@ class UnsplashPhotoAdapter :
         }
     }
 
-    class PhotoViewHolder(private val binding: ItemUnsplashPhotoBinding) :
+    //Make the ViewHolder an inner class so that we can be able to access the adapter class property, listener
+    inner class PhotoViewHolder(private val binding: ItemUnsplashPhotoBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        //ClickListener for the photo/ whole view
+        init {
+            binding.root.setOnClickListener{
+                //Get the position of the view
+                val position = bindingAdapterPosition
+                //Not -1
+                if (position != RecyclerView.NO_POSITION){
+                    val item = getItem(position)
+
+                    if (item != null){
+                        listener.onItemClick(item)
+                    }
+                }
+            }
+        }
 
         //Bind the data to the view
         fun bind(photo: UnsplashPhoto) {
@@ -47,6 +64,11 @@ class UnsplashPhotoAdapter :
                 textViewUserName.text = photo.user.username
             }
         }
+    }
+
+    //Interface for the onClickListener
+    interface OnItemClickListener{
+        fun onItemClick(photo: UnsplashPhoto)
     }
 
     //The DiffUtil
