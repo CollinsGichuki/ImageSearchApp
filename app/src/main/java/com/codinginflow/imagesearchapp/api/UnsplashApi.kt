@@ -10,10 +10,12 @@ interface UnsplashApi {
     companion object {
         //API access Key
         const val CLIENT_ID = BuildConfig.UNSPLASH_ACCESS_KEY
+        //Base URL
+        const val BASE_URL = "https://api.unsplash.com/"
     }
 
     @Headers("Accept-Version: v1", "Authorization: Client-ID $CLIENT_ID")
-    @GET("search/photo")
+    @GET("search/photos")
     suspend fun searchPhotos(
         //Search parameters
         @Query("query") query: String,
